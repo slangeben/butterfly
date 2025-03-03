@@ -13,7 +13,7 @@ let grow = false;
 let growTime = 5000; // millisec
 let time = 0; 
 
-// TWEEN VARIEBLES
+// TWEEN VARIABLES
 let transitionTime = 1000; //tween y axis
 let transitioning = false; 
 let transitionStart = 0; //transition start time
@@ -40,16 +40,16 @@ function setup() {
 function draw() {
   let currentHour = hour();
 
-
-  if (currentHour >= 6 && currentHour < 18) {// 6 am - 6pm
-  background(255); 
+  // Background and sparkle effects
+  if (currentHour >= 6 && currentHour < 18) { // 6 am - 6pm
+    background(255); 
     image(sparkleBg, 0, 0, width, height); 
-   } else {
+  } else {
     background(0);
     image(whiteSparkle, 0, 0, width, height); 
-   }
+  }
 
-  // VIDEO
+  // Video feed
   push();
   translate(0, 0, 0);
   scale(-1, 1);
@@ -57,35 +57,27 @@ function draw() {
   image(video, 0, 0, videoWidth, videoHeight);
   pop();
 
-// BLOOM EFFECT 
-push();
-blendMode(ADD);
-tint(255, 255); // white
-//filter(BLUR, 5);
-translate(0, 0, 0);
-scale(-1, 1);
-image(video, 0, 0, videoWidth, videoHeight); 
-pop();
+  // Bloom effect
+  push();
+  blendMode(ADD);
+  tint(255, 255); // white
+  translate(0, 0, 0);
+  scale(-1, 1);
+  image(video, 0, 0, videoWidth, videoHeight); 
+  pop();
 
-
-
-
-  // BUTTERFLY DEVICE
+  // Butterfly device
   translate(0, 0, 50); 
-  
   image(butterflyDevice, -15, -50, 900, 800);
 
-  // GROW BUTTON 
+  // Grow button hover and interaction
   let over = dist(mouseX - width / 2, mouseY - height / 2, 0, 350) < 100;
-
-  //darken on hover event
   push();
   if (over) {
     tint(200);
   }
   if (mouseIsPressed && over) {
     image(growBtn, -20, 350, 220, 110);
-  
     if (!grow && butterflies.length === 0 || butterflies[butterflies.length - 1].flapped) {
       grow = true;
       let customTargetY = height / 6.5; // Y POSITION OF TRANSLATION
@@ -96,11 +88,10 @@ pop();
   } else {
     image(growBtn, -20, 350, 200, 100);
   }
-  
   pop();
 
-  // butterflies
-  for (let i = 0; i < butterflies.length; i++) {
+  // Update and display butterflies
+  for (let i = butterflies.length - 1; i >= 0; i--) {
     butterflies[i].update();
     butterflies[i].display();
   }
@@ -111,7 +102,7 @@ class Butterfly {
     this.x = startX;
     this.y = startY;
     this.targetY = targetY;
-    this.duration = 2000;
+    this.duration = duration;
     this.startGrowthTime = millis();
     this.scaleAmount = 0;
     this.flapping = false;
@@ -124,10 +115,10 @@ class Butterfly {
     this.flapDelay = 0;
     this.flapStartTime = 0;
 
-    this.radiusX = 100; // initial X radius
-    this.radiusY = 100; // initial Y radius
-    this.radiusGrowthSpeedX = 0.15; // speed at which the X radius increases
-    this.radiusGrowthSpeedY = 0.05; // speed at which the Y radius stays constant or grows slightly
+    this.radiusX = 100; 
+    this.radiusY = 100; 
+    this.radiusGrowthSpeedX = 0.15; 
+    this.radiusGrowthSpeedY = 0.05; 
   }
 
   update() {
@@ -135,12 +126,12 @@ class Butterfly {
 
     // Growing phase
     if (elapsedTime < growTime) {
-      this.scaleAmount = map(elapsedTime, 0, growTime, 0, 0.5); // Scale from 0 to 0.5 over growTime
+      this.scaleAmount = map(elapsedTime, 0, growTime, 0, 0.5); 
     } else {
       this.scaleAmount = 0.5;
       this.flapping = true;
 
-      // TWEEN for vertical movement
+      // Transition phase
       if (!this.transitioning && !this.transitionComplete) {
         this.transitionStart = millis();
         this.transitioning = true;
@@ -159,14 +150,12 @@ class Butterfly {
     }
 
     // Increase X and Y radii over time
-    this.radiusX += this.radiusGrowthSpeedX; // Stretch X radius
-    this.radiusY += this.radiusGrowthSpeedY; // Grow Y radius slightly, or keep constant
+    this.radiusX += this.radiusGrowthSpeedX;
+    this.radiusY += this.radiusGrowthSpeedY;
 
-    // Set the maximum allowed radius based on the window size
-    let maxRadiusX = width / 2 - 150 * this.scaleAmount; // Allow for butterfly's width
-    let maxRadiusY = height / 2 - 250 * this.scaleAmount; // Allow for butterfly's height
+    let maxRadiusX = width / 2 - 150 * this.scaleAmount;
+    let maxRadiusY = height / 2 - 250 * this.scaleAmount;
 
-    // Ensure radius does not exceed the max bounds
     this.radiusX = min(this.radiusX, maxRadiusX);
     this.radiusY = min(this.radiusY, maxRadiusY);
 
@@ -178,15 +167,11 @@ class Butterfly {
     if (this.flapping && this.transitionComplete) {
       let flapElapsed = millis() - this.flapStartTime;
       if (flapElapsed >= this.flapDelay) {
-       
-        this.x = sin(this.time * 0.01) * this.radiusX; 
-        this.y = cos(this.time * 0.01) * this.radiusY; 
-
-        // check collisions
+        this.x = sin(this.time * 0.01) * this.radiusX;
+        this.y = cos(this.time * 0.01) * this.radiusY;
         this.checkBounds();
-
         this.time += 1;
-        this.wingAngle = cos(frameCount * 6.5) * PI / 4; // Flap the wings
+        this.wingAngle = cos(frameCount * 6.5) * PI / 4; 
       }
     }
 
@@ -196,18 +181,15 @@ class Butterfly {
   }
 
   checkBounds() {
-   
-    let halfWidth = 150 * this.scaleAmount; 
-    let halfHeight = 250 * this.scaleAmount; 
+    let halfWidth = 150 * this.scaleAmount;
+    let halfHeight = 250 * this.scaleAmount;
 
-    
     if (this.x + halfWidth > width / 2) {
-      this.x = width / 2 - halfWidth; 
+      this.x = width / 2 - halfWidth;
     } else if (this.x - halfWidth < -width / 2) {
-      this.x = -width / 2 + halfWidth; 
+      this.x = -width / 2 + halfWidth;
     }
 
-   
     if (this.y + halfHeight > height / 2) {
       this.y = height / 2 - halfHeight;
     } else if (this.y - halfHeight < -height / 2) {
