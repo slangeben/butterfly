@@ -3,6 +3,9 @@ let growBtn;
 let video;
 let sparkleBg;
 let whiteSparkle;
+let font;
+let font2;
+let currentMode = "day"; // Default mode
 
 let videoWidth = 300;
 let videoHeight = 220;
@@ -23,8 +26,11 @@ function preload() {
   growBtn = loadImage("growBtn.png");
   rightWing = loadImage("butterflyRightWing.png");
   leftWing = loadImage("butterflyLeftWing.png");
-  sparkleBg = loadImage("sparkles.gif")
-  whiteSparkle = loadImage("sparklesWhite.gif")
+  sparkleBg = loadImage("sparkles.gif");
+  whiteSparkle = loadImage("sparklesWhite.gif");
+
+  font = loadFont("CourierPrime-Regular.ttf");
+  font2 = loadFont("ARIAL.TTF");
 }
 
 function setup() {
@@ -40,18 +46,48 @@ function setup() {
 function draw() {
   let currentHour = hour();
 
-  // Background and sparkle effects
-  if (currentHour >= 6 && currentHour < 18) { // 6 am - 6pm
-    background(255); 
-    image(sparkleBg, 0, 0, width, height); 
+  // Adjust based on the 'currentMode' variable, which switches between "day" and "night"
+  if (currentMode === "day") {
+    background(255); // White background during the day
+    image(sparkleBg, 0, 0, width, height); // Day sparkle background
+  } else if (currentMode === "night") {
+    background(0); // Black background at night
+    image(whiteSparkle, 0, 0, width, height); // Night sparkle background
+  } else if (currentHour >= 6 && currentHour < 18) {
+    // Default to day mode if no key press and it's day time
+    currentMode = "day";
+    background(255);
+    image(sparkleBg, 0, 0, width, height);
   } else {
+    // Default to night mode if no key press and it's night time
+    currentMode = "night";
     background(0);
-    image(whiteSparkle, 0, 0, width, height); 
+    image(whiteSparkle, 0, 0, width, height);
   }
+  push();
+  textSize(15);
+  if (currentMode === "day") {
+    fill(0); // Black text for day mode
+  } else if (currentMode === "night") {
+    fill(255); // White text for night mode
+  }
+  
+  textFont(font);
+  textAlign(CENTER);
+  
+  // Text display with proper positioning
+  text("press 'D' for day, and 'N' for night", -15, 440);
+  text("BUTTERFLY - IRL TO URL", -10, -420); // Adjust vertical positioning for clarity
+  text("click button to make the butterfly grow in your world (irl)", -10, -390);
+  text("then watch it expand to digital (url)", -10, -370);
+  pop();
 
+  
+  
+  
   // Video feed
   push();
-  translate(0, 0, 0);
+  translate(0, 30, 0);
   scale(-1, 1);
   tint(100, 150, 200);
   image(video, 0, 0, videoWidth, videoHeight);
@@ -60,14 +96,14 @@ function draw() {
   // Bloom effect
   push();
   blendMode(ADD);
-  tint(255, 255); // white
-  translate(0, 0, 0);
+  tint(255, 255); // White glow
+  translate(0, 30, 0);
   scale(-1, 1);
   image(video, 0, 0, videoWidth, videoHeight); 
   pop();
 
   // Butterfly device
-  translate(0, 0, 50); 
+  translate(0, 30, 50); 
   image(butterflyDevice, -15, -50, 900, 800);
 
   // Grow button hover and interaction
@@ -77,23 +113,34 @@ function draw() {
     tint(200);
   }
   if (mouseIsPressed && over) {
-    image(growBtn, -20, 350, 220, 110);
+    image(growBtn, -20, 300, 220, 110);
     if (!grow && butterflies.length === 0 || butterflies[butterflies.length - 1].flapped) {
       grow = true;
-      let customTargetY = height / 6.5; // Y POSITION OF TRANSLATION
+      let customTargetY = height / 8.5; // Y POSITION OF TRANSLATION, move
       let animationDuration = 3000; 
-      let newButterfly = new Butterfly(-15, 0, customTargetY, animationDuration);
+      let newButterfly = new Butterfly(-15, 5, customTargetY, animationDuration);
       butterflies.push(newButterfly); 
     }
   } else {
-    image(growBtn, -20, 350, 200, 100);
+    image(growBtn, -20, 300, 200, 100);
   }
   pop();
 
-  // Update and display butterflies
+  // butterflies
   for (let i = butterflies.length - 1; i >= 0; i--) {
     butterflies[i].update();
     butterflies[i].display();
+  }
+}
+
+
+function keyPressed() {
+  console.log("key pressed:", key); 
+
+  if (key === "D" || key === "d") {
+    currentMode = "day";
+  } else if (key === "N" || key === "n") {
+    currentMode = "night";
   }
 }
 
