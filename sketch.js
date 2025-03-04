@@ -20,6 +20,8 @@ let transitionTime = 1000; //tween y axis
 let transitioning = false; 
 let transitionStart = 0; //transition start time
 
+let tinkerbell = [];
+
 function preload() {
   butterflyDevice = loadImage("butterflyDevice.png");
   growBtn = loadImage("growBtn.png");
@@ -32,7 +34,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  let cnv = createCanvas(windowWidth, windowHeight, WEBGL);
+  let ctx = cnv.canvas.getContext("webgl2", { willReadFrequently: true }); // Use "webgl2" for WebGL mode
   imageMode(CENTER);
 
   // VIDEO
@@ -77,7 +80,7 @@ function draw() {
   text("press 'D' for day, and 'N' for night", -15, 440);
   text("BUTTERFLY - IRL TO URL", -10, -420); // Adjust vertical positioning for clarity
   text("click button to make the butterfly grow in your world (irl)", -10, -390);
-  text("then watch it expand to digital (url)", -10, -370);
+  text("then watch it expand into the digital (url)", -10, -370);
   pop();
 
   
