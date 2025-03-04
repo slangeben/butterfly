@@ -4,7 +4,6 @@ let video;
 let sparkleBg;
 let whiteSparkle;
 let font;
-let font2;
 let currentMode = "day"; // Default mode
 
 let videoWidth = 300;
@@ -30,7 +29,6 @@ function preload() {
   whiteSparkle = loadImage("sparklesWhite.gif");
 
   font = loadFont("CourierPrime-Regular.ttf");
-  font2 = loadFont("ARIAL.TTF");
 }
 
 function setup() {
