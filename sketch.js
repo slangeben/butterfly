@@ -16,9 +16,9 @@ let growTime = 5000; // millisec
 let time = 0; 
 
 // TWEEN VARIABLES
-let transitionTime = 1000; //tween y axis
+let transitionTime = 1000; //y axis tween
 let transitioning = false; 
-let transitionStart = 0; //transition start time
+let transitionStart = 0; //start time
 
 let tinkerbell = [];
 
@@ -35,7 +35,7 @@ function preload() {
 
 function setup() {
   let cnv = createCanvas(windowWidth, windowHeight, WEBGL);
-  let ctx = cnv.canvas.getContext("webgl2", { willReadFrequently: true }); // Use "webgl2" for WebGL mode
+  let ctx = cnv.canvas.getContext("webgl2", { willReadFrequently: true });
   imageMode(CENTER);
 
   // VIDEO
@@ -47,20 +47,20 @@ function setup() {
 function draw() {
   let currentHour = hour();
 
-  // Adjust based on the 'currentMode' variable, which switches between "day" and "night"
+  //DYNAMIC DAY AND NIGHT MODE
   if (currentMode === "day") {
-    background(255); // White background during the day
-    image(sparkleBg, 0, 0, width, height); // Day sparkle background
+    background(255); 
+    image(sparkleBg, 0, 0, width, height); 
   } else if (currentMode === "night") {
-    background(0); // Black background at night
-    image(whiteSparkle, 0, 0, width, height); // Night sparkle background
+    background(0);
+    image(whiteSparkle, 0, 0, width, height); 
   } else if (currentHour >= 6 && currentHour < 18) {
-    // Default to day mode if no key press and it's day time
+    
     currentMode = "day";
     background(255);
     image(sparkleBg, 0, 0, width, height);
   } else {
-    // Default to night mode if no key press and it's night time
+    
     currentMode = "night";
     background(0);
     image(whiteSparkle, 0, 0, width, height);
@@ -68,17 +68,17 @@ function draw() {
   push();
   textSize(15);
   if (currentMode === "day") {
-    fill(0); // Black text for day mode
+    fill(0); 
   } else if (currentMode === "night") {
-    fill(255); // White text for night mode
+    fill(255); 
   }
   
   textFont(font);
   textAlign(CENTER);
   
-  // Text display with proper positioning
+ // INFO TEXT
   text("press 'D' for day, and 'N' for night", -15, 440);
-  text("BUTTERFLY - IRL TO URL", -10, -420); // Adjust vertical positioning for clarity
+  text("BUTTERFLY - IRL TO URL", -10, -420); 
   text("click button to make the butterfly grow in your world (irl)", -10, -390);
   text("then watch it expand into the digital (url)", -10, -370);
   pop();
@@ -94,20 +94,20 @@ function draw() {
   image(video, 0, 0, videoWidth, videoHeight);
   pop();
 
-  // Bloom effect
+  // BLOOM EFFECT
   push();
   blendMode(ADD);
-  tint(255, 255); // White glow
+  tint(255, 255); // glow
   translate(0, 30, 0);
   scale(-1, 1);
   image(video, 0, 0, videoWidth, videoHeight); 
   pop();
 
-  // Butterfly device
+  // butterfly device
   translate(0, 30, 50); 
   image(butterflyDevice, -15, -50, 900, 800);
 
-  // Grow button hover and interaction
+  // BUTTON
   let over = dist(mouseX - width / 2, mouseY - height / 2, 0, 350) < 100;
   push();
   if (over) {
@@ -117,7 +117,7 @@ function draw() {
     image(growBtn, -20, 300, 220, 110);
     if (!grow && butterflies.length === 0 || butterflies[butterflies.length - 1].flapped) {
       grow = true;
-      let customTargetY = height / 8.5; // Y POSITION OF TRANSLATION, move
+      let customTargetY = height / 8.5; // Y POSITION OF TRANSLATION
       let animationDuration = 3000; 
       let newButterfly = new Butterfly(-15, 5, customTargetY, animationDuration);
       butterflies.push(newButterfly); 
@@ -172,14 +172,14 @@ class Butterfly {
   update() {
     let elapsedTime = millis() - this.startGrowthTime;
 
-    // Growing phase
+    // growing
     if (elapsedTime < growTime) {
       this.scaleAmount = map(elapsedTime, 0, growTime, 0, 0.5); 
     } else {
       this.scaleAmount = 0.5;
       this.flapping = true;
 
-      // Transition phase
+      // TWEEN y-axis
       if (!this.transitioning && !this.transitionComplete) {
         this.transitionStart = millis();
         this.transitioning = true;
@@ -197,7 +197,7 @@ class Butterfly {
       }
     }
 
-    // Increase X and Y radii over time
+    // increase x and y
     this.radiusX += this.radiusGrowthSpeedX;
     this.radiusY += this.radiusGrowthSpeedY;
 
