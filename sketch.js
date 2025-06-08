@@ -4,7 +4,7 @@ let video;
 let sparkleBg;
 let whiteSparkle;
 let font;
-let currentMode = "day"; // Default mode
+let currentMode = "day";
 
 let videoWidth = 300;
 let videoHeight = 220;
@@ -34,6 +34,7 @@ function preload() {
 }
 
 function setup() {
+  pixelDensity(1); // Fix zoom on high-DPI devices like iPad
   let cnv = createCanvas(windowWidth, windowHeight, WEBGL);
   let ctx = cnv.canvas.getContext("webgl2", { willReadFrequently: true });
   imageMode(CENTER);
@@ -42,6 +43,10 @@ function setup() {
   video = createCapture(VIDEO);
   video.size(videoWidth, videoHeight);
   video.hide();
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
@@ -267,3 +272,10 @@ class Butterfly {
     pop();
   }
 }
+
+/*
+IMPORTANT: Add this in your HTML <head> section to prevent zooming on iPad and mobiles:
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+*/
