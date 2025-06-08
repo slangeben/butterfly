@@ -13,14 +13,6 @@ let rightWing, leftWing;
 let butterflies = [];
 let grow = false; 
 let growTime = 5000; // millisec
-let time = 0; 
-
-// TWEEN VARIABLES
-let transitionTime = 1000; //y axis tween
-let transitioning = false; 
-let transitionStart = 0; //start time
-
-let tinkerbell = [];
 
 function preload() {
   butterflyDevice = loadImage("butterflyDevice.png");
@@ -60,16 +52,15 @@ function draw() {
     background(0);
     image(whiteSparkle, 0, 0, width, height); 
   } else if (currentHour >= 6 && currentHour < 18) {
-    
     currentMode = "day";
     background(255);
     image(sparkleBg, 0, 0, width, height);
   } else {
-    
     currentMode = "night";
     background(0);
     image(whiteSparkle, 0, 0, width, height);
   }
+
   push();
   textSize(15);
   if (currentMode === "day") {
@@ -80,17 +71,14 @@ function draw() {
   
   textFont(font);
   textAlign(CENTER);
-  
- // INFO TEXT
+
+  // INFO TEXT
   text("press 'D' for day, and 'N' for night", -15, 440);
   text("BUTTERFLY - IRL TO URL", -10, -420); 
   text("click button to make the butterfly grow in your world (irl)", -10, -390);
   text("then watch it expand into the digital (url)", -10, -370);
   pop();
 
-  
-  
-  
   // Video feed
   push();
   translate(0, 30, 0);
@@ -139,15 +127,12 @@ function draw() {
   }
 }
 
-
-function keyPressed() {
-  console.log("key pressed:", key); 
-
-  if (key === "D" || key === "d") {
-    currentMode = "day";
-  } else if (key === "N" || key === "n") {
-    currentMode = "night";
-  }
+// Helper function to check if tap/click is over grow button
+function isOverGrowButton(x, y) {
+  // Convert to WEBGL coordinates (center origin)
+  let cx = x - width / 2;
+  let cy = y - height / 2;
+  return dist(cx, cy, 0, 350) < 100;
 }
 
 function touchStarted() {
@@ -172,8 +157,15 @@ function toggleBackground() {
   }
 }
 
+function keyPressed() {
+  if (key === "D" || key === "d") {
+    currentMode = "day";
+  } else if (key === "N" || key === "n") {
+    currentMode = "night";
+  }
+}
 
-
+// Butterfly class unchanged from your original code
 class Butterfly {
   constructor(startX, startY, targetY, duration) {
     this.x = startX;
@@ -297,9 +289,4 @@ class Butterfly {
   }
 }
 
-/*
-IMPORTANT: Add this in your HTML <head> section to prevent zooming on iPad and mobiles:
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-
-*/
