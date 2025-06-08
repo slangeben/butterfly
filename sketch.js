@@ -150,6 +150,20 @@ function keyPressed() {
   }
 }
 
+function touchStarted() {
+  let over = dist(touchX - width / 2, touchY - height / 2, 0, 350) < 100;
+
+  if (!over) {
+    // toggle day/night mode only if not touching grow button
+    if (currentMode === "day") {
+      currentMode = "night";
+    } else {
+      currentMode = "day";
+    }
+  }
+  return false; // prevent default
+}
+
 class Butterfly {
   constructor(startX, startY, targetY, duration) {
     this.x = startX;
