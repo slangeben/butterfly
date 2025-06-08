@@ -150,13 +150,17 @@ function keyPressed() {
   }
 }
 
-function mousePressed() {
-  toggleBackground();
+function touchStarted() {
+  if (!isOverGrowButton(touchX, touchY)) {
+    toggleBackground();
+  }
   return false;
 }
 
-function touchStarted() {
-  toggleBackground();
+function mousePressed() {
+  if (!isOverGrowButton(mouseX, mouseY)) {
+    toggleBackground();
+  }
   return false;
 }
 
@@ -167,6 +171,7 @@ function toggleBackground() {
     currentMode = "day";
   }
 }
+
 
 
 class Butterfly {
