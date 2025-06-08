@@ -34,7 +34,7 @@ function preload() {
 }
 
 function setup() {
-  pixelDensity(1); // Fix zoom on high-DPI devices like iPad
+  //pixelDensity(1); // Fix zoom on high-DPI devices like iPad
   let cnv = createCanvas(windowWidth, windowHeight, WEBGL);
   let ctx = cnv.canvas.getContext("webgl2", { willReadFrequently: true });
   imageMode(CENTER);
